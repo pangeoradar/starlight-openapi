@@ -20,6 +20,12 @@ export default defineConfig({
             schema: '../schemas/v3.0/petstore-expanded.yaml',
           },
           {
+            base: 'api/test',
+            collapsed: false,
+            label: 'Pangeo',
+            schema: '../schemas/v3.0/test.yaml',
+          },
+          {
             base: 'api/1password',
             label: '1Password Connect',
             schema:
@@ -63,7 +69,7 @@ export default defineConfig({
           ],
         },
         {
-          label: 'Demo',
+          label: 'Test',
           items: openAPISidebarGroups,
         },
       ],

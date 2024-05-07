@@ -4,6 +4,7 @@ import { Icon } from '@astrojs/starlight/components'
 import { getProperties, isAdditionalPropertiesWithSchemaObject, type SchemaObject } from '../../libs/schemaObject'
 import Key from '../Key.astro'
 import Tags from '../Tags.astro'
+import Type from '../Type.astro'
 
 import Schema from './SchemaObject.astro'
 import SchemaObjectAllOf from './SchemaObjectAllOf.astro'
@@ -21,7 +22,9 @@ const properties = getProperties(schemaObject)
 
 <details class:list={[!nested && 'root']} open={!nested}>
   <summary>
-    <span class="type">object</span>
+    <Type>
+      object
+    </Type>
     <Icon class="caret" name="right-caret" size="1.25rem" />
   </summary>
   <Tags
@@ -30,6 +33,7 @@ const properties = getProperties(schemaObject)
       schemaObject.maxProperties && `<= ${schemaObject.maxProperties} properties`,
     ]}
   />
+
   <SchemaObjectObjectProperties parent={schemaObject} {properties} required={schemaObject.required} />
   <SchemaObjectAllOf {schemaObject} />
   {
@@ -50,6 +54,7 @@ const properties = getProperties(schemaObject)
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+    margin-top: 0.75rem !important;
   }
 
   details details {
@@ -63,6 +68,7 @@ const properties = getProperties(schemaObject)
     display: flex;
     list-style-type: none;
     user-select: none;
+   
   }
 
   summary:hover {
@@ -90,12 +96,6 @@ const properties = getProperties(schemaObject)
 
   :global([dir='rtl']) .caret {
     transform: rotateZ(180deg);
-  }
-
-  .type {
-    color: var(--sl-color-text-accent);
-    font-weight: 600;
-    margin-inline-end: 0.3rem;
   }
 
   .any {

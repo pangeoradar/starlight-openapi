@@ -1,4 +1,7 @@
 ---
+import { slug } from 'github-slugger'
+
+import type { StarlightOpenAPISchemaConfig } from '../../libs/schema'
 import {
   getNullable,
   getSchemaObjects,
@@ -10,6 +13,7 @@ import Example from '../example/Example.astro'
 import ExternalDocs from '../ExternalDocs.astro'
 import Items from '../Items.astro'
 import Md from '../Md.astro'
+import Type from '../Type.astro'
 
 import SchemaObjectAllOf from './SchemaObjectAllOf.astro'
 import SchemaObjectObject from './SchemaObjectObject.astro'
@@ -20,15 +24,29 @@ interface Props {
   negated?: boolean
   nested?: boolean
   schemaObject: SchemaObject
+  config?: StarlightOpenAPISchemaConfig
 }
 
-const { hideExample = false, negated, nested = false, schemaObject } = Astro.props
+const { hideExample = false, negated, nested = false, schemaObject, config } = Astro.props
 
 const schemaObjects = getSchemaObjects(schemaObject)
 
 const hasMany = schemaObjects !== undefined
 const isNegated = schemaObject.not !== undefined
 ---
+
+{
+  schemaObject['x-identifier'] && config && (
+    <div>
+      <span>Schema: </span>
+      <Type>
+        <a class="identifier" href={`/${config?.base}/schemas/#${slug(schemaObject['x-identifier'])}`}>
+          {schemaObject['x-identifier']}
+        </a>
+      </Type>
+    </div>
+  )
+}
 
 {
   hasMany ? (

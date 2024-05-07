@@ -4,6 +4,7 @@ import type { Schema } from '../libs/schema'
 import { getSecurityDefinitions } from '../libs/security'
 import { interspece } from '../libs/utils'
 
+import EndpointList from './endpoint/EndpointList.astro'
 import ExternalDocs from './ExternalDocs.astro'
 import Md from './Md.astro'
 import SecurityDefinitions from './security/SecurityDefinitions.astro'
@@ -65,3 +66,5 @@ const contacts = [document.info.contact?.url, document.info.contact?.email].filt
 </ul>
 
 <SecurityDefinitions definitions={securityDefinitions} />
+
+<EndpointList schema={document} />

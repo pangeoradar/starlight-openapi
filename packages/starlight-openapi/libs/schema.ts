@@ -33,6 +33,7 @@ export function getSchemaSidebarGroups(schema: Schema): SidebarManualGroup {
     config.label ?? document.info.title,
     [
       makeSidebarLink('Overview', getBaseLink(config)),
+      makeSidebarLink('Schemas', `${getBaseLink(config)}schemas`),
       ...getPathItemSidebarGroups(schema),
       ...getWebhooksSidebarGroups(schema),
     ],

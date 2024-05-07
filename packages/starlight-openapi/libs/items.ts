@@ -10,12 +10,14 @@ export function isOpenAPIV2Items(items: unknown): items is Items {
 
 export function getType(items: Items): string | undefined {
   if (items.type === 'array' && items.items) {
-    const arrayType = getType(items.items)
+    const arrayType = (items.items['x-identifier'] ?? getType(items.items)) as string | undefined
 
     return arrayType ? `Array<${arrayType}>` : 'Array'
   }
 
-  return Array.isArray(items.type) ? items.type.join(' | ') : items.type
+  return Array.isArray(items.type)
+    ? items.type.join(' | ')
+    : ((items['x-identifier'] ?? items.type) as string | undefined)
 }
 
 export function getBound(items: Items, type: 'maximum' | 'minimum'): string | undefined {

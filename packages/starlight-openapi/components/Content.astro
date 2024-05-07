@@ -1,6 +1,7 @@
 ---
 import type { Content } from '../libs/content'
 import { isExamples } from '../libs/example'
+import type { StarlightOpenAPISchemaConfig } from '../libs/schema'
 import { isSchemaObject } from '../libs/schemaObject'
 
 import ContentPicker from './ContentPicker.astro'
@@ -8,9 +9,10 @@ import Schema from './schema/Schema.astro'
 
 interface Props {
   content: Content
+  config?: StarlightOpenAPISchemaConfig | undefined
 }
 
-const { content } = Astro.props
+const { content, config } = Astro.props
 ---
 
 <ContentPicker label="Select media type" types={Object.keys(content)}>
@@ -22,6 +24,8 @@ const { content } = Astro.props
             example={media.example}
             examples={isExamples(media.examples) ? media.examples : undefined}
             schema={isSchemaObject(media.schema) ? media.schema : undefined}
+            config={config}
+            generate={true}
           />
         </div>
       )

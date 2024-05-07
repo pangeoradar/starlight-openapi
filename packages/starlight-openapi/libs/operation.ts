@@ -1,5 +1,7 @@
 import type { OpenAPI } from 'openapi-types'
 
+import type { OpenAPIV3 } from '../../../node_modules/.pnpm/openapi-types@12.1.3/node_modules/openapi-types/dist/index.d.ts'
+
 import { type Document, isOpenAPIV2Document } from './document'
 import { slug } from './path'
 import { isPathItem, type PathItem } from './pathItem'
@@ -101,6 +103,10 @@ export function getWebhooksOperations(document: Schema['document']): PathItemOpe
   }
 
   return operations
+}
+
+export function getSchemas(document: OpenAPIV3.Document): OpenAPIV3.ComponentsObject['schemas'] {
+  return document.components?.schemas ?? {}
 }
 
 export function isPathItemOperation<TMethod extends OperationHttpMethod>(

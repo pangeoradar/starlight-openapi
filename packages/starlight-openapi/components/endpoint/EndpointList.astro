@@ -1,0 +1,24 @@
+---
+import type { OpenAPI } from 'openapi-types'
+
+import { getOperationsByTag } from '../../libs/operation'
+
+import EndpointEntry from './EndpointEntry.astro'
+
+
+
+interface Props {
+  schema: OpenAPI.Document;
+}
+
+const { schema } = Astro.props
+
+const operations = getOperationsByTag(schema);
+---
+<h2>Operations</h2>
+
+{
+  [...operations.values()].flatMap((operations) => (
+    <EndpointEntry operations={operations} />
+  ))
+}

@@ -4,11 +4,11 @@ import OpenAPIParser from '@readme/openapi-parser'
 import type { InferGetStaticPropsType } from 'astro'
 
 import { getSchemaStaticPaths } from '../libs/route'
-import { getPageProps } from '../libs/starlight'
+import { getPageProps, makeHeading } from '../libs/starlight'
 
 import Operation from './operation/Operation.astro'
 import Overview from './Overview.astro'
-
+import SchemaPage from './SchemaPage.astro'
 export const prerender = true
 
 export function getStaticPaths() {
@@ -21,11 +21,45 @@ const { schema, type } = Astro.props
 
 schema.document = await OpenAPIParser.dereference(schema.document)
 
+function getComponentByType(type: 'overview' | 'operation' | 'schema') {
+  switch (type) {
+    case 'overview': {
+      return Overview
+    }
+    case 'operation': {
+      return Operation
+    }
+    case 'schema': {
+      return SchemaPage
+    }
+    default: {
+      throw new Error(`Invalid type: ${type}`)
+    }
+  }
+}
+
+const Component = getComponentByType(type)
+
 const isOverview = type === 'overview'
 
-const title = isOverview ? 'Overview' : Astro.props.operation.title
+const title = isOverview ? 'Overview' : Astro.props.operation?.title
+// TODO разбить на страницы в зависимости от type
+const starlightPageProps =
+  type === 'schema'
+    ? {
+        frontmatter: { title: 'Schemas' },
+        headings: Object.keys(schema.document.components?.schemas ?? {}).map((name) => makeHeading(2, name)),
+      }
+    : getPageProps(title ?? '', schema, isOverview ? undefined : Astro.props.operation)
 ---
 
-<StarlightPage {...getPageProps(title, schema, isOverview ? undefined : Astro.props.operation)}>
-  {isOverview ? <Overview {schema} /> : <Operation {schema} operation={Astro.props.operation} />}
+<StarlightPage {...starlightPageProps}>
+  <Component {...Astro.props} schema={schema} operation={Astro.props.operation} />
 </StarlightPage>
+
+<style is:global>
+  .key {
+    line-height: 1.1;
+    margin-top: 0.75rem !important;
+  }
+</style>

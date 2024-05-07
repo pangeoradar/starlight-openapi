@@ -1,0 +1,27 @@
+---
+import type { InferGetStaticPropsType } from 'astro'
+
+import { getSchemaStaticPaths } from '../libs/route'
+
+import Schema from './schema/Schema.astro'
+import Section from './Section.astro'
+
+export function getStaticPaths() {
+  return getSchemaStaticPaths()
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+
+const { schema } = Astro.props
+const schemasEntries = Object.entries(schema.document?.components?.schemas ?? {})
+---
+
+{
+  schemasEntries.map(([name, localSchema]) => (
+    <div>
+      <Section title={name}>
+        <Schema key={name} schema={localSchema} generate={true} />
+      </Section>
+    </div>
+  ))
+}

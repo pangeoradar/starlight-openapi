@@ -1,4 +1,5 @@
 ---
+import type { StarlightOpenAPISchemaConfig } from '../../libs/schema'
 import { isSchemaObjectObject, type SchemaObject as SchemaObjectType } from '../../libs/schemaObject'
 import Examples, { type Props as ExamplesProps } from '../example/Examples.astro'
 import Text from '../Text.astro'
@@ -8,15 +9,15 @@ import SchemaObject from './SchemaObject.astro'
 interface Props extends ExamplesProps {
   description?: string | undefined
   schema: SchemaObjectType | undefined
+  config: StarlightOpenAPISchemaConfig | undefined;
 }
 
-const { description, example, examples, schema } = Astro.props
+const { description, example, examples, schema, config, generate } = Astro.props
 
 // For objects, we want to show the description before the object itself.
 const isObject = schema && isSchemaObjectObject(schema)
 ---
-
 {isObject && <Text>{description}</Text>}
-{schema && <SchemaObject schemaObject={schema} hideExample={example !== undefined || examples !== undefined} />}
+{schema && <SchemaObject schemaObject={schema} hideExample={example !== undefined || examples !== undefined} config={config} />}
 {!isObject && <Text>{description}</Text>}
-<Examples example={example} examples={examples} />
+<Examples example={example} examples={examples} schema={schema} generate={generate} />

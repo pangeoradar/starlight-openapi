@@ -1,0 +1,44 @@
+---
+import type { PathItemOperation } from '../../libs/operation';
+import OperationMethodTag from '../operation/OperationMethodTag.astro';
+import Type from '../Type.astro';
+
+interface Props {
+  operations: PathItemOperation[];
+}
+
+const { operations } = Astro.props
+---
+<div class="endpoint-entry">
+  {
+    operations.map(({path, method, slug}) => (
+      path && (
+        <div class="endpoint-entry__path">
+          <OperationMethodTag {method} class="endpoint-entry__method"/>
+          <Type>
+            <a href={`${slug}`}>
+              {path}
+            </a>
+          </Type>
+        </div>
+      )
+    ))
+  }
+
+</div>
+
+<style is:global>
+  .endpoint-entry {
+    display: grid;
+    gap: 8px;
+  }
+  .endpoint-entry__path {
+    display: flex;
+    gap: 8px;
+    margin-top: 0 !important;
+  }
+
+  .endpoint-entry__method {
+    width: 80px;
+  }
+</style>

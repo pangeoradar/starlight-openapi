@@ -1,6 +1,6 @@
 import schemas from 'virtual:starlight-openapi-schemas'
 
-import { getOperationsByTag, getWebhooksOperations, type PathItemOperation } from './operation'
+import { getOperationsByTag, getSchemas, getWebhooksOperations, type PathItemOperation } from './operation'
 import { getBaseLink, stripLeadingAndTrailingSlashes } from './path'
 import type { Schema } from './schema'
 
@@ -13,6 +13,16 @@ export function getSchemaStaticPaths(): StarlighOpenAPIRoute[] {
       props: {
         schema,
         type: 'overview',
+      },
+    },
+    {
+      params: {
+        openAPISlug: stripLeadingAndTrailingSlashes(`${getBaseLink(schema.config)}schemas`),
+      },
+      props: {
+        schemas: getSchemas(schema.document),
+        schema,
+        type: 'schema',
       },
     },
     ...getPathItemStaticPaths(schema),
@@ -58,7 +68,7 @@ interface StarlighOpenAPIRoute {
   params: {
     openAPISlug: string
   }
-  props: StarlighOpenAPIRouteOverviewProps | StarlighOpenAPIRouteOperationProps
+  props: StarlighOpenAPIRouteOverviewProps | StarlighOpenAPIRouteOperationProps | StarlighOpenAPIRouteSchemaProps
 }
 
 interface StarlighOpenAPIRouteOverviewProps {
@@ -70,4 +80,10 @@ interface StarlighOpenAPIRouteOperationProps {
   operation: PathItemOperation
   schema: Schema
   type: 'operation'
+}
+
+interface StarlighOpenAPIRouteSchemaProps {
+  schemas: PathItemOperation[]
+  schema: Schema
+  type: 'schema'
 }

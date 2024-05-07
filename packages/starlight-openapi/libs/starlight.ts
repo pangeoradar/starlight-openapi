@@ -141,7 +141,7 @@ function makeHeadings(items: MarkdownHeading[]): MarkdownHeading[] {
   return [makeHeading(1, 'Overview', '_top'), ...items]
 }
 
-function makeHeading(depth: number, text: string, customSlug?: string): MarkdownHeading {
+export function makeHeading(depth: number, text: string, customSlug?: string): MarkdownHeading {
   return { depth, slug: customSlug ?? slug(text), text }
 }
 

@@ -43,10 +43,10 @@ const consumes = getOpenAPIV2OperationConsumes(schema, operation)
       {openAPIV2RequestBodyParameter ? (
         <>
           <Select label="The list of MIME types the operation can consume" options={consumes} />
-          <SchemaObject schemaObject={openAPIV2RequestBodyParameter.schema} />
+          <SchemaObject schemaObject={openAPIV2RequestBodyParameter.schema} config={schema.config} />
         </>
       ) : openAPIV3RequestBody ? (
-        <Content content={openAPIV3RequestBody.content} />
+        <Content content={openAPIV3RequestBody.content} config={schema.config} />
       ) : null}
     </Section>
   )

@@ -4,6 +4,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components'
 import { getType } from '../../libs/items'
 import type { Discriminator, SchemaObjects } from '../../libs/schemaObject'
 import Tag from '../Tag.astro'
+import Type from '../Type.astro'
 
 import SchemaObject from './SchemaObject.astro'
 
@@ -33,7 +34,9 @@ const humanReadableType: Record<SchemaObjects['type'], string> = {
 ---
 
 <div>
-  <span class="type">{humanReadableType[type]}:</span>
+  <Type>
+    {humanReadableType[type]}:
+  </Type>
   {discriminatorPropertyName && <Tag>discriminator: {discriminatorPropertyName}</Tag>}
 </div>
 <Tabs>
@@ -49,11 +52,5 @@ const humanReadableType: Record<SchemaObjects['type'], string> = {
 <style>
   div {
     margin-bottom: 0.5rem;
-  }
-
-  .type {
-    margin-inline-end: 0.3rem;
-    text-decoration: underline;
-    text-underline-offset: 0.3rem;
   }
 </style>

@@ -5,6 +5,7 @@ import { isSchemaObjectObject } from '../libs/schemaObject'
 import SchemaObject from './schema/SchemaObject.astro'
 import Tag from './Tag.astro'
 import Tags from './Tags.astro'
+import Type from './Type.astro'
 
 interface Props {
   hideExample?: boolean
@@ -21,14 +22,15 @@ const enumItems = items.enum ?? items.items?.enum
 {
   items.type && (
     <div>
-      <span class="type">
+      <Type>
         {negated && 'not '}
         {getType(items)}
-      </span>
+      </Type>
       {items.format && <Tag>format: {items.format}</Tag>}
     </div>
   )
 }
+
 <Tags
   tags={[
     items.default && `default: ${items.default}`,
@@ -47,11 +49,3 @@ const enumItems = items.enum ?? items.items?.enum
 
 {enumItems && <Tags label="Allowed values:" tags={enumItems} />}
 {items.items && isSchemaObjectObject(items.items) && <SchemaObject nested schemaObject={items.items} {hideExample} />}
-
-<style>
-  .type {
-    color: var(--sl-color-text-accent);
-    font-weight: 600;
-    margin-inline-end: 0.3rem;
-  }
-</style>
