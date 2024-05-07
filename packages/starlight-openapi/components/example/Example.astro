@@ -1,5 +1,5 @@
 ---
-import { Code } from '@astrojs/starlight/components'
+import { Code, Icon } from '@astrojs/starlight/components'
 
 import type { ExampleV3 } from '../../libs/example'
 import Md from '../Md.astro'
@@ -47,14 +47,23 @@ const code = exampleToRender ? getExampleValue(exampleToRender.value).trim() : '
 {
   exampleToRender && (
     <>
-      <Text>{exampleToRender.summary}</Text>
-      <Md text={exampleToRender.description} />
-      {exampleToRender.externalValue && (
-        <Text>
-          <a href={exampleToRender.externalValue}>{exampleToRender.externalValue}</a>
-        </Text>
-      )}
-      {code.length > 0 && <Code {code} lang={getExampleLang(type)} />}
+      <details class="not-content">
+        <summary>
+          <div>
+            <Text>{exampleToRender.summary}</Text>
+            <Md text={exampleToRender.description} />
+          </div>
+          <Icon class="caret" name="right-caret" size="1.25rem" />
+        </summary>
+        <div>
+          {exampleToRender.externalValue && (
+            <Text>
+              <a href={exampleToRender.externalValue}>{exampleToRender.externalValue}</a>
+            </Text>
+          )}
+          {code.length > 0 && <Code {code} lang={getExampleLang(type)} />}
+        </div>
+      </details>
     </>
   )
 }
@@ -69,5 +78,50 @@ const code = exampleToRender ? getExampleValue(exampleToRender.value).trim() : '
   :global(div.expressive-code pre > code) {
     text-wrap: wrap;
     word-break: break-all;
+  }
+  details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 0.75rem !important;
+  }
+
+  details details {
+    border-inline-start: 1px solid var(--sl-color-gray-4);
+    padding-inline-start: 0.8rem;
+  }
+  summary {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    list-style-type: none;
+    user-select: none;
+  }
+
+  summary:hover {
+    color: var(--sl-color-gray-2);
+  }
+
+  details.root > summary {
+    display: none;
+  }
+
+  summary::marker,
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .caret {
+      transition: transform 0.2s ease-in-out;
+    }
+  }
+
+  details[open] > summary > .caret {
+    transform: rotateZ(90deg);
+  }
+
+  :global([dir='rtl']) .caret {
+    transform: rotateZ(180deg);
   }
 </style>
