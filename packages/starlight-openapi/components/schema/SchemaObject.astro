@@ -25,9 +25,10 @@ interface Props {
   nested?: boolean
   schemaObject: SchemaObject
   config?: StarlightOpenAPISchemaConfig
+  collapsable?: boolean | undefined;
 }
 
-const { hideExample = false, negated, nested = false, schemaObject, config } = Astro.props
+const { collapsable, hideExample = false, negated, nested = false, schemaObject, config } = Astro.props
 
 const schemaObjects = getSchemaObjects(schemaObject)
 
@@ -58,13 +59,12 @@ const isNegated = schemaObject.not !== undefined
       <Md text={schemaObject.description} />
       <ExternalDocs docs={schemaObject.externalDocs} />
       {isSchemaObjectObject(schemaObject) ? (
-        <SchemaObjectObject {nested} {schemaObject} />
+        <SchemaObjectObject {nested} {schemaObject} {collapsable} />
       ) : isSchemaObjectAllOf(schemaObject) ? (
-        <SchemaObjectAllOf {schemaObject} />
+        <SchemaObjectAllOf {schemaObject} {collapsable} />
       ) : (
         <Items items={schemaObject} {negated} nullable={getNullable(schemaObject)} />
       )}
-      {!hideExample && schemaObject.example && <Example raw={schemaObject.example} />}
     </>
   )
 }

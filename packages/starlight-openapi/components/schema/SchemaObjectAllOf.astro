@@ -12,9 +12,10 @@ import SchemaObjectObjectProperties from './SchemaObjectObjectProperties.astro'
 
 interface Props {
   schemaObject: SchemaObject
+  collapsable?: boolean | undefined;
 }
 
-const { schemaObject } = Astro.props
+const { collapsable, schemaObject } = Astro.props
 ---
 
 {
@@ -25,6 +26,7 @@ const { schemaObject } = Astro.props
           parent={schemaObject}
           properties={getProperties(allOfSchemaObject)}
           required={allOfSchemaObject.required}
+          {collapsable}
         />
       ) : isSchemaObject(allOfSchemaObject) ? (
         <Items

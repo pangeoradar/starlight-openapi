@@ -9,9 +9,10 @@ interface Props {
   example?: ExampleV3
   raw?: ExampleV3['value']
   type?: string
+  collapsable?: boolean | undefined;
 }
 
-const { example, raw, type } = Astro.props
+const { example, raw, type, collapsable } = Astro.props
 
 const exampleToRender = raw === undefined ? example : { value: raw }
 
@@ -46,31 +47,45 @@ const code = exampleToRender ? getExampleValue(exampleToRender.value).trim() : '
 
 {
   exampleToRender && (
-    <>
-      <details class="not-content">
-        <summary>
-          <div>
-            <Text>{exampleToRender.summary}</Text>
-            <Md text={exampleToRender.description} />
-          </div>
-          <Icon class="caret" name="right-caret" size="1.25rem" />
-        </summary>
-        <div>
-          {exampleToRender.externalValue && (
-            <Text>
-              <a href={exampleToRender.externalValue}>{exampleToRender.externalValue}</a>
-            </Text>
-          )}
-          {code.length > 0 && <Code {code} lang={getExampleLang(type)} />}
-        </div>
-      </details>
-    </>
+      collapsable
+          ? (
+            <>
+              <details class="not-content">
+                <summary>
+                  <div>
+                    <Text>{exampleToRender.summary}</Text>
+                    <Md text={exampleToRender.description} />
+                  </div>
+                  <Icon class="caret" name="right-caret" size="1.25rem" />
+                </summary>
+                <div>
+                  {exampleToRender.externalValue && (
+                    <Text>
+                      <a href={exampleToRender.externalValue}>{exampleToRender.externalValue}</a>
+                    </Text>
+                  )}
+                  {code.length > 0 && <Code {code} lang={getExampleLang(type)} />}
+                </div>
+              </details>
+            </>
+          ) : (
+                <div>
+                  {exampleToRender.externalValue && (
+                    <Text>
+                      <a href={exampleToRender.externalValue}>{exampleToRender.externalValue}</a>
+                    </Text>
+                  )}
+                  {code.length > 0 && <Code {code} lang={getExampleLang(type)} />}
+                </div>
+
+          )
+
   )
 }
 
 <style>
   :global(div.expressive-code .frame pre) {
-    background-color: var(--sl-color-gray-5);
+    background-color: var(--sl-color-gray-6);
     border: 1px solid var(--sl-color-gray-4);
     margin-block: 0.5rem;
   }

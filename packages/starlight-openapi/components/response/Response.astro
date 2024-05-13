@@ -42,12 +42,12 @@ const isEmpty = !openAPIV2ResponseSchema && !openAPIV3ResponseContent
     openAPIV2ResponseSchema ? (
       <>
         <Select label="The list of MIME types the operation can produce" options={produces} />
-        <SchemaObject schemaObject={openAPIV2ResponseSchema} config={schema.config} />
+        <SchemaObject schemaObject={openAPIV2ResponseSchema} config={schema.config} collapsable={true} />
       </>
     ) : openAPIV3ResponseContent ? (
-      <Content content={openAPIV3ResponseContent} config={schema.config} />
+      <Content content={openAPIV3ResponseContent} config={schema.config} collapsable={true} />
     ) : null
   }
   {isResponseWithHeaders(response) && <ResponseHeaders headers={response.headers} slot="post-panel" />}
-  {isOpenAPIV2ResponseWithExamples(response) && <ResponseExamples examples={response.examples} slot="post-panel" />}
+  {isOpenAPIV2ResponseWithExamples(response) && <ResponseExamples examples={response.examples} slot="post-panel" {collapsable} />}
 </Section>

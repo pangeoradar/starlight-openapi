@@ -12,9 +12,10 @@ export interface Props {
   examples: ExamplesV3 | undefined
   schema: SchemaObjectType | undefined
   generate?: boolean | undefined
+    collapsable?: boolean | undefined
 }
 
-const { example, examples, schema, generate } = Astro.props
+const { collapsable, example, examples, schema, generate } = Astro.props
 
 const internalExample = generate ? example ?? Sampler.sample(schema ?? {}) : example
 const internalExamples = generate ? getExamples(examples) : examples
@@ -37,7 +38,7 @@ function getExamples(examples?: ExamplesV3) {
         <ContentPicker label="Select example" types={Object.keys(internalExamples)}>
           {Object.entries(internalExamples).map(([type, data], index) => (
             <div data-openapi-content-type={type} hidden={index > 0} role="tabpanel">
-              <Example example={data} {type} />
+              <Example example={data} {type} {collapsable} />
             </div>
           ))}
         </ContentPicker>
