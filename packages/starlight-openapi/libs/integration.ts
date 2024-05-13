@@ -9,7 +9,7 @@ export function starlightOpenAPIIntegration(schemas: Schema[]): AstroIntegration
     hooks: {
       'astro:config:setup': ({ injectRoute, updateConfig }) => {
         injectRoute({
-          entrypoint: 'starlight-openapi/route',
+          entrypoint: '@pangeoradar/starlight-openapi/route',
           pattern: `[...openAPISlug]`,
           prerender: true,
         })
