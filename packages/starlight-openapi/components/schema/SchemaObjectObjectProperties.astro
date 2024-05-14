@@ -5,6 +5,7 @@ import {
     SchemaObject
 } from '../../libs/schemaObject'
 import SchemaRow from './SchemaRow.astro'
+import {StarlightOpenAPISchemaConfig} from "../../libs/schema";
 
 
 interface Props {
@@ -12,13 +13,14 @@ interface Props {
   properties: Properties
   required: string[] | undefined
   nested?: boolean | undefined;
+  config?: StarlightOpenAPISchemaConfig
 }
 
-const { nested, parent, properties, required } = Astro.props
+const { nested, parent, properties, required,config } = Astro.props
 
 ---
 {
   Object.entries(properties).map(([name, schema]) => (
-    <SchemaRow name={name} {nested} schema={schema} parent={parent} properties={properties} required={required}></SchemaRow>
+    <SchemaRow name={name} {config} {nested} {schema} {parent} {properties} {required}></SchemaRow>
   ))
 }

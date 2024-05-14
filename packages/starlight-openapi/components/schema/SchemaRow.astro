@@ -15,6 +15,8 @@ import Schema from './SchemaObject.astro'
 import SchemaObjectAllOf from "./SchemaObjectAllOf.astro";
 import SchemaObjectObject from "./SchemaObjectObject.astro";
 import Md from "../Md.astro";
+import {StarlightOpenAPISchemaConfig} from "../../libs/schema";
+import ExternalDocs from "../ExternalDocs.astro";
 
 interface Props {
     schema: SchemaObject
@@ -22,9 +24,10 @@ interface Props {
     properties: Properties
     required: string[] | undefined
     nested?: boolean | undefined;
+    config?: StarlightOpenAPISchemaConfig;
 }
 
-const { nested, name, schema,parent, properties, required } = Astro.props
+const { nested, name, schema,parent, properties, required, config } = Astro.props
 const isArraySchema = (schema: SchemaObject) => schema.items && isSchemaObjectObject(schema.items);
 const isObjectOrArray = (schema: SchemaObject) => isSchemaObjectObject(schema) || isArraySchema(schema);
 const isObject = isObjectOrArray(schema)
@@ -48,16 +51,18 @@ const isObject = isObjectOrArray(schema)
                     <Tag>recursive</Tag>
                 </div>
         ) : (
-                    <ItemsComponent items={schema}></ItemsComponent>
+                    <ItemsComponent {config} items={schema}></ItemsComponent>
                     <Md text={schema.description} />
+                    <ExternalDocs docs={schema.externalDocs} />
         )}
         {
             isObject && <div slot="nested">{
                     isArraySchema(schema)
-                        ? schema.items && isSchemaObjectObject(schema.items) && <Schema nested {isObject} schemaObject={schema.items}  />
-                        : schema && <Schema nested {isObject} schemaObject={schema}  />
+                        ? schema.items && isSchemaObjectObject(schema.items) && <Schema {config} nested {isObject} schemaObject={schema.items}  />
+                        : schema && <Schema  {config} nested {isObject} schemaObject={schema}  />
                 }</div>
         }
 
     </Key>
-    }
+}
+

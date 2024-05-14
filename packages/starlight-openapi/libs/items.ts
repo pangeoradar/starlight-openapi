@@ -19,6 +19,17 @@ export function getType(items: Items): string | undefined {
     ? items.type.join(' | ')
     : ((items['x-identifier'] ?? items.type) as string | undefined)
 }
+export function getTypeWithSchema(items: Items): { type: string | null; schema: string | null } {
+  if (items.type === 'array' && items.items) {
+    const arrayType = (items.items['x-identifier'] ?? getType(items.items)) as string | undefined
+
+    return { type: arrayType ? `Array<${arrayType}>` : 'Array', schema: arrayType ?? null }
+  }
+
+  return Array.isArray(items.type)
+    ? { type: items.type.join(' | ') ?? null, schema: null }
+    : { type: items.type ?? null, schema: items['x-identifier'] ?? null }
+}
 
 export function getBound(items: Items, type: 'maximum' | 'minimum'): string | undefined {
   const exclusive = items[type === 'maximum' ? 'exclusiveMaximum' : 'exclusiveMinimum']

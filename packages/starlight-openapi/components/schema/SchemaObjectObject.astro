@@ -9,13 +9,15 @@ import Type from '../Type.astro'
 import Schema from './SchemaObject.astro'
 import SchemaObjectAllOf from './SchemaObjectAllOf.astro'
 import SchemaObjectObjectProperties from './SchemaObjectObjectProperties.astro'
+import {StarlightOpenAPISchemaConfig} from "../../libs/schema";
 
 interface Props {
   nested: boolean
   schemaObject: SchemaObject
+    config: StarlightOpenAPISchemaConfig;
 }
 
-const { nested, schemaObject } = Astro.props
+const { nested, schemaObject, config } = Astro.props
 
 const properties = getProperties(schemaObject)
 ---
@@ -31,15 +33,15 @@ const properties = getProperties(schemaObject)
     ]}
   />
 
-  <SchemaObjectObjectProperties parent={schemaObject} {properties} {nested} required={schemaObject.required} />
-  <SchemaObjectAllOf {schemaObject} />
+  <SchemaObjectObjectProperties {config} parent={schemaObject} {properties} {nested} required={schemaObject.required} />
+  <SchemaObjectAllOf {schemaObject} {config} />
   {
     schemaObject.additionalProperties && (
       <Key additional name="key">
         {schemaObject.additionalProperties === true ? (
           <div class="any">any</div>
         ) : isAdditionalPropertiesWithSchemaObject(schemaObject.additionalProperties) ? (
-          <Schema {nested} schemaObject={schemaObject.additionalProperties} />
+          <Schema {config} {nested} schemaObject={schemaObject.additionalProperties} />
         ) : null}
       </Key>
     )

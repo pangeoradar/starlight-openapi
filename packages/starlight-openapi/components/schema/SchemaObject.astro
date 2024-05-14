@@ -1,6 +1,6 @@
 ---
 import { slug } from 'github-slugger'
-
+import {Debug} from 'astro:components'
 import type { StarlightOpenAPISchemaConfig } from '../../libs/schema'
 import {
   getNullable,
@@ -23,7 +23,7 @@ interface Props {
   hideExample?: boolean | undefined
   negated?: boolean
   nested?: boolean
-    isObject?: boolean | undefined
+  isObject?: boolean | undefined
   schemaObject: SchemaObject
   config?: StarlightOpenAPISchemaConfig
   collapsable?: boolean | undefined;
@@ -37,7 +37,7 @@ const hasMany = schemaObjects !== undefined
 const isNegated = schemaObject.not !== undefined
 ---
 
-{
+<!--{
   schemaObject['x-identifier'] && config && (
     <div>
       <span>Schema: </span>
@@ -48,21 +48,22 @@ const isNegated = schemaObject.not !== undefined
       </Type>
     </div>
   )
-}
+}-->
+
 {
   hasMany ? (
-    <SchemaObjects {nested} discriminator={schemaObject.discriminator} {nested} {schemaObjects} />
+    <SchemaObjects {nested} discriminator={schemaObject.discriminator} {config} {nested} {schemaObjects} />
   ) : isNegated ? (
-    <Astro.self {nested} negated schemaObject={schemaObject.not} />
+    <Astro.self {nested} {config} negated schemaObject={schemaObject.not} />
   ) : (
     <>
 
         <div class={[nested && 'nested']}>
             {isObject ? isSchemaObjectObject(schemaObject) ? (
-                    <SchemaObjectObject {nested} {schemaObject} {collapsable} />
+                    <SchemaObjectObject {config} {nested} {schemaObject} {collapsable} />
             ) : isSchemaObjectAllOf(schemaObject) ? (
-                    <SchemaObjectAllOf {nested} {schemaObject} {collapsable} />
-            ) : null : <Items {nested} items={schemaObject} {negated} nullable={getNullable(schemaObject)} />
+                    <SchemaObjectAllOf {config} {nested} {schemaObject} {collapsable} />
+            ) : null : <Items {nested} {config} items={schemaObject} {negated} nullable={getNullable(schemaObject)} />
             }
 
         </div>

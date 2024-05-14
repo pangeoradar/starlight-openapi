@@ -1,31 +1,49 @@
 ---
-import { getBound, getType, type Items } from '../libs/items'
+import { getBound, getType, getTypeWithSchema, type Items } from '../libs/items'
 import { isSchemaObjectObject } from '../libs/schemaObject'
 
 import SchemaObject from './schema/SchemaObject.astro'
 import Tag from './Tag.astro'
 import Tags from './Tags.astro'
 import Type from './Type.astro'
+import {StarlightOpenAPISchemaConfig} from "../libs/schema";
+import {slug} from "github-slugger";
 
 interface Props {
   hideExample?: boolean
   items: Items
   negated?: boolean | undefined
   nullable?: boolean | undefined
+  config?: StarlightOpenAPISchemaConfig
 }
 
-const { hideExample, items, negated, nullable } = Astro.props
+const { hideExample, config, items, negated, nullable } = Astro.props
 
+const { type, schema } = getTypeWithSchema(items);
 const enumItems = items.enum ?? items.items?.enum
+const commonTypes = ['string', 'boolean', 'integer', 'number', 'object', 'array', 'null'];
+const isCustomSchema = /^[A-Z]/.test(schema ?? '');
 ---
 
 {
   items.type && (
     <div>
-      <Type>
-        {negated && 'not '}
-        {getType(items)}
-      </Type>
+        {isCustomSchema && config
+            ? (
+                  <Type>
+                <a href={`/astro/${config?.base}/schemas/#${slug(schema)}`} class="schema-link">
+                    {negated && 'not '}
+                    {getType(items)}
+                </a>
+                  </Type>
+            )
+            : (
+                <Type>
+                    {negated && 'not '}
+                    {getType(items)}
+                  </Type>
+                )
+        }
       {items.format && <Tag>format: {items.format}</Tag>}
     </div>
   )
@@ -49,3 +67,8 @@ const enumItems = items.enum ?? items.items?.enum
 
 {enumItems && <Tags label="Allowed values:" tags={enumItems} />}
 
+<style>
+    .schema-link {
+        color: var(--sl-color-text-accent);
+    }
+</style>
