@@ -1,42 +1,101 @@
 ---
+import {Icon} from "@astrojs/starlight/components";
 interface Props {
   additional?: boolean
   deprecated?: boolean
   name: string
   required?: boolean | undefined
+  isObject?: boolean | undefined
+  nested?: boolean | undefined
 }
 
-const { additional, deprecated, name, required } = Astro.props
+const { nested, isObject, additional, deprecated, name, required, onOpen } = Astro.props
+const id = name + Math.random().toString().split('.')[1]
 ---
 
-<div class="key not-content">
-  <div class="name">
-    <strong>{additional
-      ? <em>{name}1</em>
-      : deprecated
-        ? <s>{name}1</s>
-        : name
-      }</strong>
-    {required && <div class="required">required</div>}
-    {deprecated && <div class="deprecated">deprecated</div>}
-    {additional && <div class="additional">additional properties</div>}
-  </div>
-  <div class="description">
-    <slot />
-  </div>
-</div>
+<div class:list={["key", "not-content", nested && "nested"]} data-key-id={id}>
 
+  <div style="display: flex;width: 100%">
+    <label for={id} class="name" onClick={() => onOpen?.()}>
+      <strong id={`caret-${id}`}>{additional
+        ? <em>{name}</em>
+        : deprecated
+          ? <s>{name}</s>
+          : name
+        }
+        {isObject && <Icon class="caret"  name="right-caret" size="1.25rem" /> }
+      </strong>
+      {required && <div class="required">required</div>}
+      {deprecated && <div class="deprecated">deprecated</div>}
+      {additional && <div class="additional">additional properties</div>}
+    </label>
+    <div class="description">
+      <slot />
+    </div>
+  </div>
+   <div class="nested-key">
+    <slot name="nested" />
+  </div>
+
+</div>
+<script define:vars={{ id, isObject }}>
+  if (isObject) {
+    const keyEl = document.querySelector(`[data-key-id=${id}]`)
+    const input = document.querySelector(`#caret-${id}`)
+    input.addEventListener('click', () => {
+      const isOpen = keyEl.classList.toggle('open')
+      const detailsEl = keyEl.querySelector('details');
+      detailsEl.open = isOpen
+    })
+
+  }
+</script>
 <style>
   .key {
     display: flex;
-    //flex-direction: column;
-    gap: 1rem;
+    flex-direction: column;
+    //gap: 1rem;
+    position: relative;
   }
-
+  .key.open > div >.name > strong .caret {
+    transform: rotateZ(90deg);
+  }
   .key:first-of-type{
     margin-top: 0 !important;
   }
+  @media (prefers-reduced-motion: no-preference) {
+    .caret {
+      transition: transform 0.2s ease-in-out;
+    }
+  }
 
+  .key strong {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+  }
+  .key.nested strong::before {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: -8px;
+    width: 6px;
+    height: 1px;
+    background: var(--sl-color-gray-4);
+  }
+  strong > .caret {
+    position: absolute;
+    right: -20px;
+  }
+  .nested-key {
+    margin-top: 20px;
+    margin-left: 1rem;
+    padding-left: 0.5rem;
+    border-left: 1px solid var(--sl-color-gray-4);
+  }
+  .nested-key:empty {
+    display: none;
+  }
   .name {
     max-width: 50%;
     min-width: 20%;

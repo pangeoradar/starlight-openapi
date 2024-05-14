@@ -23,12 +23,13 @@ interface Props {
   hideExample?: boolean | undefined
   negated?: boolean
   nested?: boolean
+    isObject?: boolean | undefined
   schemaObject: SchemaObject
   config?: StarlightOpenAPISchemaConfig
   collapsable?: boolean | undefined;
 }
 
-const { collapsable, hideExample = false, negated, nested = false, schemaObject, config } = Astro.props
+const { isObject, collapsable, hideExample = false, negated, nested = false, schemaObject, config } = Astro.props
 
 const schemaObjects = getSchemaObjects(schemaObject)
 
@@ -48,23 +49,28 @@ const isNegated = schemaObject.not !== undefined
     </div>
   )
 }
-
 {
   hasMany ? (
-    <SchemaObjects discriminator={schemaObject.discriminator} {nested} {schemaObjects} />
+    <SchemaObjects {nested} discriminator={schemaObject.discriminator} {nested} {schemaObjects} />
   ) : isNegated ? (
-    <Astro.self negated schemaObject={schemaObject.not} />
+    <Astro.self {nested} negated schemaObject={schemaObject.not} />
   ) : (
     <>
-      <Md text={schemaObject.description} />
-      <ExternalDocs docs={schemaObject.externalDocs} />
-      {isSchemaObjectObject(schemaObject) ? (
-        <SchemaObjectObject {nested} {schemaObject} {collapsable} />
-      ) : isSchemaObjectAllOf(schemaObject) ? (
-        <SchemaObjectAllOf {schemaObject} {collapsable} />
-      ) : (
-        <Items items={schemaObject} {negated} nullable={getNullable(schemaObject)} />
-      )}
+
+        <div class={[nested && 'nested']}>
+            {isObject ? isSchemaObjectObject(schemaObject) ? (
+                    <SchemaObjectObject {nested} {schemaObject} {collapsable} />
+            ) : isSchemaObjectAllOf(schemaObject) ? (
+                    <SchemaObjectAllOf {nested} {schemaObject} {collapsable} />
+            ) : null : <Items {nested} items={schemaObject} {negated} nullable={getNullable(schemaObject)} />
+            }
+
+        </div>
+
     </>
   )
 }
+<style>
+  .nested {
+  }
+</style>

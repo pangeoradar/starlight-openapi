@@ -1,0 +1,63 @@
+---
+import {
+    isSchemaObject,
+    isSchemaObjectAllOf,
+    isSchemaObjectObject,
+    Properties,
+    SchemaObject
+} from '../../libs/schemaObject'
+import Key from '../Key.astro'
+import Tag from '../Tag.astro'
+import Type from '../Type.astro'
+import ItemsComponent from '../Items.astro'
+
+import Schema from './SchemaObject.astro'
+import SchemaObjectAllOf from "./SchemaObjectAllOf.astro";
+import SchemaObjectObject from "./SchemaObjectObject.astro";
+import Md from "../Md.astro";
+
+interface Props {
+    schema: SchemaObject
+    name: string;
+    properties: Properties
+    required: string[] | undefined
+    nested?: boolean | undefined;
+}
+
+const { nested, name, schema,parent, properties, required } = Astro.props
+const isArraySchema = (schema: SchemaObject) => schema.items && isSchemaObjectObject(schema.items);
+const isObjectOrArray = (schema: SchemaObject) => isSchemaObjectObject(schema) || isArraySchema(schema);
+const isObject = isObjectOrArray(schema)
+---
+
+{
+    <Key
+            name={name}
+            {isObject}
+            required={Array.isArray(required) && required?.includes(name)}
+            {nested}
+
+    >
+
+        {schema === parent ? (
+                <div>
+                    <Type>
+                        object
+                    </Type>
+
+                    <Tag>recursive</Tag>
+                </div>
+        ) : (
+                    <ItemsComponent items={schema}></ItemsComponent>
+                    <Md text={schema.description} />
+        )}
+        {
+            isObject && <div slot="nested">{
+                    isArraySchema(schema)
+                        ? schema.items && isSchemaObjectObject(schema.items) && <Schema nested {isObject} schemaObject={schema.items}  />
+                        : schema && <Schema nested {isObject} schemaObject={schema}  />
+                }</div>
+        }
+
+    </Key>
+    }

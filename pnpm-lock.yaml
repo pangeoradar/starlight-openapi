@@ -47,15 +47,15 @@ importers:
       '@astrojs/starlight':
         specifier: 0.19.0
         version: 0.19.0(astro@4.4.0)
+      '@pangeoradar/starlight-openapi':
+        specifier: workspace:*
+        version: link:../packages/starlight-openapi
       astro:
         specifier: 4.4.0
         version: 4.4.0(@types/node@18.17.3)(typescript@5.1.6)
       sharp:
         specifier: 0.33.2
         version: 0.33.2
-      starlight-openapi:
-        specifier: workspace:*
-        version: link:../packages/starlight-openapi
       starlight-package-managers:
         specifier: 0.3.0
         version: 0.3.0(@astrojs/starlight@0.19.0)(astro@4.4.0)

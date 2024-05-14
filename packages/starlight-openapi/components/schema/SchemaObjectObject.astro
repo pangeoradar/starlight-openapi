@@ -20,12 +20,9 @@ const { nested, schemaObject } = Astro.props
 const properties = getProperties(schemaObject)
 ---
 
-<details class:list={[!nested && 'root']} open={!nested}>
+<details class:list={[!nested && 'root']}  open={!nested}>
   <summary>
-    <Type>
-      object
-    </Type>
-    <Icon class="caret" name="right-caret" size="1.25rem" />
+
   </summary>
   <Tags
     tags={[
@@ -34,7 +31,7 @@ const properties = getProperties(schemaObject)
     ]}
   />
 
-  <SchemaObjectObjectProperties parent={schemaObject} {properties} required={schemaObject.required} />
+  <SchemaObjectObjectProperties parent={schemaObject} {properties} {nested} required={schemaObject.required} />
   <SchemaObjectAllOf {schemaObject} />
   {
     schemaObject.additionalProperties && (
@@ -42,7 +39,7 @@ const properties = getProperties(schemaObject)
         {schemaObject.additionalProperties === true ? (
           <div class="any">any</div>
         ) : isAdditionalPropertiesWithSchemaObject(schemaObject.additionalProperties) ? (
-          <Schema schemaObject={schemaObject.additionalProperties} />
+          <Schema {nested} schemaObject={schemaObject.additionalProperties} />
         ) : null}
       </Key>
     )
@@ -54,12 +51,9 @@ const properties = getProperties(schemaObject)
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    margin-top: 0.75rem !important;
+    margin-top: 0 !important;
   }
-
   details details {
-    border-inline-start: 1px solid var(--sl-color-gray-4);
-    padding-inline-start: 0.8rem;
   }
 
   summary {

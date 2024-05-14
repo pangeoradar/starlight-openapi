@@ -32,7 +32,10 @@ const humanReadableType: Record<SchemaObjects['type'], string> = {
   oneOf: 'One of',
 }
 ---
+<details class:list={[!nested && 'root']}>
+  <summary>
 
+  </summary>
 <div>
   <Type>
     {humanReadableType[type]}:
@@ -43,14 +46,20 @@ const humanReadableType: Record<SchemaObjects['type'], string> = {
   {
     schemaObjects.map((schemaObject) => (
       <TabItem label={schemaObject.title ?? getType(schemaObject) ?? 'unknown'}>
-        <SchemaObject {nested} schemaObject={schemaObject} />
+        <SchemaObject  schemaObject={schemaObject} isObject />
       </TabItem>
     ))
   }
 </Tabs>
+</details>
 
 <style>
   div {
     margin-bottom: 0.5rem;
+  }
+  summary,
+  summary::marker,
+  summary::-webkit-details-marker {
+    display: none;
   }
 </style>

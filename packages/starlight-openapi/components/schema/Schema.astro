@@ -19,6 +19,6 @@ const { collapsable, description, example, examples, schema, config, generate } 
 const isObject = schema && isSchemaObjectObject(schema)
 ---
 {isObject && <Text>{description}</Text>}
-{schema && <SchemaObject schemaObject={schema} hideExample={example !== undefined || examples !== undefined} config={config} />}
+{schema && <SchemaObject isObject={true} schemaObject={schema} hideExample={example !== undefined || examples !== undefined} config={config} />}
 {!isObject && <Text>{description}</Text>}
 <Examples {example} {examples} {schema} {generate} {collapsable} />

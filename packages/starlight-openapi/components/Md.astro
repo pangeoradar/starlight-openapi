@@ -10,5 +10,13 @@ const { text } = Astro.props
 
 const code = text && text.length > 0 ? await transformMarkdown(capitalize(text)) : ''
 ---
-
+<span class="md">
 {text && text.length > 0 && <div set:html={code} />}
+
+</span>
+
+<style>
+    .md {
+        font-size: var(--sl-text-sm) !important;
+    }
+</style>
